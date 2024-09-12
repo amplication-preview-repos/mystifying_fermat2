@@ -1,0 +1,79 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model MindfulnessComponent {
+  content   Json?
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  typeField String?
+  updatedAt DateTime @updatedAt
+}
+
+model Pattern {
+  configField Json?
+  createdAt   DateTime @default(now())
+  description String?
+  id          String   @id @default(cuid())
+  name        String?
+  updatedAt   DateTime @updatedAt
+}
+
+model UiElement {
+  createdAt  DateTime @default(now())
+  id         String   @id @default(cuid())
+  properties Json?
+  style      Json?
+  typeField  String?
+  updatedAt  DateTime @updatedAt
+}
+
+model Subject {
+  createdAt        DateTime          @default(now())
+  description      String?
+  id               String            @id @default(cuid())
+  name             String?
+  tutoringSessions TutoringSession[]
+  updatedAt        DateTime          @updatedAt
+}
+
+model Message {
+  content   String?
+  createdAt DateTime  @default(now())
+  id        String    @id @default(cuid())
+  receiver  String?
+  sender    String?
+  timestamp DateTime?
+  updatedAt DateTime  @updatedAt
+}
+
+model TutoringSession {
+  createdAt DateTime                   @default(now())
+  endTime   DateTime?
+  id        String                     @id @default(cuid())
+  startTime DateTime?
+  status    EnumTutoringSessionStatus?
+  subject   Subject?                   @relation(fields: [subjectId], references: [id])
+  subjectId String?
+  tutor     Tutor?                     @relation(fields: [tutorId], references: [id])
+  tutorId   String?
+  updatedAt DateTime                   @updatedAt
+}
+
+model Tutor {
+  bio              String?
+  createdAt        DateTime          @default(now())
+  id               String            @id @default(cuid())
+  name             String?
+  tutoringSessions TutoringSession[]
+  updatedAt        DateTime          @updatedAt
+}
+
+enum EnumTutoringSessionStatus {
+  Option1
+}
